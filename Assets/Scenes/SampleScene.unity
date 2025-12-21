@@ -416,6 +416,20 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!114 &482215222
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc1515ab76e54f068e2f2207940fab32, type: 3}
+  m_Name: Player/Move
+  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.InputActionReference
+  m_Asset: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  m_ActionId: 351f2ccd-1f9f-44bf-9bec-d62ac5c5f408
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -652,6 +666,7 @@ GameObject:
   - component: {fileID: 1216753385}
   - component: {fileID: 1216753384}
   - component: {fileID: 1216753383}
+  - component: {fileID: 1216753386}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -817,6 +832,29 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1216753386
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1216753378}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16752d33147f18246bd31e8b3710e43f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
+  movement: {fileID: 482215222}
+  rb: {fileID: 1216753385}
+  cameraYaw: {fileID: 1215878707}
+  ground: {fileID: 1216753383}
+  maxSpeed: 6
+  acceleration: 22
+  deceleration: 26
+  turnSmoothTime: 0.08
+  rotateToMove: 1
+  airControl: 0.35
+  inputDeadzone: 0.08
 --- !u!1 &1258724041
 GameObject:
   m_ObjectHideFlags: 0
