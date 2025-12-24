@@ -3,9 +3,6 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Player/Jump Config", fileName = "PlayerJumpConfig")]
 public class JumpSettingsSO : ScriptableObject
 {
-    [Header("Mode")]
-    public bool useChargedJump = true;
-
     [Header("Buffer/Coyote")]
     public float jumpBufferTime = 0.12f;
     public float coyoteTime = 0.1f;
@@ -18,14 +15,12 @@ public class JumpSettingsSO : ScriptableObject
     [Tooltip("Upward velocity that immediately marks jump as airborne before contacts separate")]
     public float leaveGroundVelocity = 0.05f;
 
-    [Header("Fixed jump")]
-    public float fixedUpImpulse = 6f;
-    public float fixedForwardImpulse = 5f;
-
     [Header("Charged jump")]
     public float maxChargeTime = 0.8f;
+
     public float minUpImpulse = 4f;
     public float maxUpImpulse = 10f;
+
     public float minForwardImpulse = 3f;
     public float maxForwardImpulse = 12f;
 

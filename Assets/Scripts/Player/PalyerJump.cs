@@ -9,10 +9,14 @@ public class PalyerJump : MonoBehaviour
     [SerializeField] private GroundChecker groundChecker;
 
     [Header("Input System")]
-    [SerializeField] private InputActionReference jump; // Button action (Space)
+    [SerializeField] private InputActionReference jump; // Button (Space)
+    [SerializeField] private InputActionReference move; // Value Vector2 (WASD)
 
-    [Header("Optional: jump forward by camera yaw")]
-    [SerializeField] private Transform forwardReference; // CameraRig yaw pivot (optional)
+    [Header("Movement direction source")]
+    [SerializeField] private Transform movementReference;
+
+    [Header("Tuning")]
+    [SerializeField] private float moveDeadzone = 0.08f;
 
     public bool IsGrounded { get; private set; }
 
@@ -23,11 +27,10 @@ public class PalyerJump : MonoBehaviour
     private bool _charging;
     private float _chargeStartTime;
 
-    private bool _jumpReleased;
-
     void OnEnable()
     {
         if (jump != null) jump.action.Enable();
+        if (move != null) move.action.Enable();
 
         IsGrounded = groundChecker != null && groundChecker.IsGrounded;
         _coyote = IsGrounded ? s.coyoteTime : 0f;
@@ -35,23 +38,21 @@ public class PalyerJump : MonoBehaviour
 
         _isJumping = false;
         _charging = false;
-        _jumpReleased = false;
     }
 
     void OnDisable()
     {
         if (jump != null) jump.action.Disable();
+        if (move != null) move.action.Disable();
     }
 
     void Update()
     {
-        if (s == null || rb == null || groundChecker == null || jump == null)
+        if (s == null || rb == null || groundChecker == null || jump == null || move == null)
             return;
 
-        // Read grounded from GroundChecker (it updates in FixedUpdate)
         IsGrounded = groundChecker.IsGrounded;
 
-        // Like in your 2D: if we just jumped and moving up, don't count grounded
         if (_isJumping && rb.linearVelocity.y > s.leaveGroundVelocity)
             IsGrounded = false;
 
@@ -60,92 +61,69 @@ public class PalyerJump : MonoBehaviour
 
         if (IsGrounded && _isJumping) _isJumping = false;
 
-        // Input System: started = press, canceled = release
         if (jump.action.WasPressedThisFrame())
-            RequestJump();
-
-        if (jump.action.WasReleasedThisFrame())
-            NotifyJumpReleased();
-
-        // Mode logic
-        if (s.useChargedJump)
         {
-            // Start charging when we have buffered press and can jump
-            if (_buffer > 0f && (IsGrounded || _coyote > 0f) && !_charging)
-            {
-                _charging = true;
-                _chargeStartTime = Time.time;
-            }
-
-            // Release -> jump
-            if (_charging && _jumpReleased)
-            {
-                _jumpReleased = false;
-                _charging = false;
-
-                float t = Mathf.Clamp01((Time.time - _chargeStartTime) / Mathf.Max(0.01f, s.maxChargeTime));
-                float curved = (s.charge01 != null) ? s.charge01.Evaluate(t) : t;
-
-                float up = Mathf.Lerp(s.minUpImpulse, s.maxUpImpulse, curved);
-                float fwd = Mathf.Lerp(s.minForwardImpulse, s.maxForwardImpulse, curved);
-
-                DoJump(up, fwd);
-
-                _buffer = 0f;
-                _coyote = 0f;
-            }
+            _buffer = s.jumpBufferTime;
         }
-        else
+
+        if (!_charging && _buffer > 0f && (IsGrounded || _coyote > 0f))
         {
-            // Fixed jump
-            if (_buffer > 0f && (IsGrounded || _coyote > 0f))
-            {
-                DoJump(s.fixedUpImpulse, s.fixedForwardImpulse);
-                _buffer = 0f;
-                _coyote = 0f;
-            }
+            _charging = true;
+            _chargeStartTime = Time.time;
+            _buffer = 0f;
         }
-    }
 
-    private void RequestJump()
-    {
-        _buffer = s.jumpBufferTime;
-    }
+        if (_charging && jump.action.WasReleasedThisFrame())
+        {
+            _charging = false;
 
-    private void NotifyJumpReleased()
-    {
-        _jumpReleased = true;
+            float t = Mathf.Clamp01((Time.time - _chargeStartTime) / Mathf.Max(0.01f, s.maxChargeTime));
+            float curved = (s.charge01 != null) ? s.charge01.Evaluate(t) : t;
+
+            float up = Mathf.Lerp(s.minUpImpulse, s.maxUpImpulse, curved);
+            float fwd = Mathf.Lerp(s.minForwardImpulse, s.maxForwardImpulse, curved);
+
+            DoJump(up, fwd);
+
+            _coyote = 0f;
+        }
+
+        if (_charging && !(IsGrounded || _coyote > 0f))
+        {
+            _charging = false;
+        }
     }
 
     private void DoJump(float upImpulse, float forwardImpulse)
     {
         var v = rb.linearVelocity;
         v.y = 0f;
-        rb.linearVelocity = v;
 
-        Vector3 fwd = GetForwardDir();
-        Vector3 impulse = Vector3.up * upImpulse + fwd * forwardImpulse;
+        Vector3 dir = GetMoveDirection();
+        Vector3 planarImpulse = (dir.sqrMagnitude > 0.0001f) ? (dir * forwardImpulse) : Vector3.zero;
 
-        rb.AddForce(impulse, ForceMode.Impulse);
+        rb.linearVelocity = new Vector3(v.x, 0f, v.z);
+        rb.AddForce(Vector3.up * upImpulse + planarImpulse, ForceMode.Impulse);
 
         _isJumping = true;
         IsGrounded = false;
     }
 
-    private Vector3 GetForwardDir()
+    private Vector3 GetMoveDirection()
     {
-        if (forwardReference != null)
+        Vector2 input = move.action.ReadValue<Vector2>();
+        if (input.sqrMagnitude < moveDeadzone * moveDeadzone)
+            return Vector3.zero;
+
+        if (movementReference != null)
         {
-            var d = forwardReference.forward;
-            d.y = 0f;
-            return (d.sqrMagnitude > 0.0001f) ? d.normalized : transform.forward;
+            Vector3 f = movementReference.forward; f.y = 0f; f.Normalize();
+            Vector3 r = movementReference.right;   r.y = 0f; r.Normalize();
+            Vector3 d = f * input.y + r * input.x;
+            return (d.sqrMagnitude > 0.0001f) ? d.normalized : Vector3.zero;
         }
 
-        Vector3 planar = rb.linearVelocity;
-        planar.y = 0f;
-        if (planar.sqrMagnitude > 0.01f) return planar.normalized;
-
-        var f = transform.forward; f.y = 0f;
-        return (f.sqrMagnitude > 0.0001f) ? f.normalized : Vector3.forward;
+        Vector3 world = new Vector3(input.x, 0f, input.y);
+        return (world.sqrMagnitude > 0.0001f) ? world.normalized : Vector3.zero;
     }
 }
