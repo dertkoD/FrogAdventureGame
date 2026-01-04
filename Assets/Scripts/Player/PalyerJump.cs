@@ -9,48 +9,37 @@ public class PalyerJump : MonoBehaviour
     [SerializeField] private GroundChecker groundChecker;
 
     [Header("Input System")]
-    [SerializeField] private InputActionReference jump; // Button (Space)
-    [SerializeField] private InputActionReference move; // Value Vector2 (WASD)
-
-    [Header("Movement direction source")]
-    [SerializeField] private Transform movementReference;
-
-    [Header("Tuning")]
-    [SerializeField] private float moveDeadzone = 0.08f;
+    [SerializeField] private InputActionReference jump;
 
     public bool IsGrounded { get; private set; }
 
-    private float _coyote;
-    private float _buffer;
+    float _coyote;
+    float _buffer;
 
-    private bool _isJumping;
-    private bool _charging;
-    private float _chargeStartTime;
+    bool _isJumping;
+    float _jumpStartTime;
 
     void OnEnable()
     {
-        if (jump != null) jump.action.Enable();
-        if (move != null) move.action.Enable();
+        jump?.action.Enable();
 
-        IsGrounded = groundChecker != null && groundChecker.IsGrounded;
+        IsGrounded = groundChecker.IsGrounded;
         _coyote = IsGrounded ? s.coyoteTime : 0f;
         _buffer = 0f;
-
         _isJumping = false;
-        _charging = false;
     }
 
     void OnDisable()
     {
-        if (jump != null) jump.action.Disable();
-        if (move != null) move.action.Disable();
+        jump?.action.Disable();
     }
 
     void Update()
     {
-        if (s == null || rb == null || groundChecker == null || jump == null || move == null)
+        if (s == null || rb == null || groundChecker == null || jump == null)
             return;
 
+        // --- Ground state ---
         IsGrounded = groundChecker.IsGrounded;
 
         if (_isJumping && rb.linearVelocity.y > s.leaveGroundVelocity)
@@ -59,71 +48,58 @@ public class PalyerJump : MonoBehaviour
         _coyote = IsGrounded ? s.coyoteTime : Mathf.Max(0f, _coyote - Time.deltaTime);
         _buffer = Mathf.Max(0f, _buffer - Time.deltaTime);
 
-        if (IsGrounded && _isJumping) _isJumping = false;
+        if (IsGrounded)
+            _isJumping = false;
 
+        // --- Input buffer ---
         if (jump.action.WasPressedThisFrame())
-        {
             _buffer = s.jumpBufferTime;
-        }
 
-        if (!_charging && _buffer > 0f && (IsGrounded || _coyote > 0f))
+        // --- Start jump instantly ---
+        if (_buffer > 0f && (IsGrounded || _coyote > 0f) && !_isJumping)
         {
-            _charging = true;
-            _chargeStartTime = Time.time;
+            StartJump();
             _buffer = 0f;
-        }
-
-        if (_charging && jump.action.WasReleasedThisFrame())
-        {
-            _charging = false;
-
-            float t = Mathf.Clamp01((Time.time - _chargeStartTime) / Mathf.Max(0.01f, s.maxChargeTime));
-            float curved = (s.charge01 != null) ? s.charge01.Evaluate(t) : t;
-
-            float up = Mathf.Lerp(s.minUpImpulse, s.maxUpImpulse, curved);
-            float fwd = Mathf.Lerp(s.minForwardImpulse, s.maxForwardImpulse, curved);
-
-            DoJump(up, fwd);
-
             _coyote = 0f;
         }
 
-        if (_charging && !(IsGrounded || _coyote > 0f))
-        {
-            _charging = false;
-        }
+        // --- Variable height (jump cut) ---
+        if (jump.action.WasReleasedThisFrame())
+            CutJump();
     }
 
-    private void DoJump(float upImpulse, float forwardImpulse)
+    void StartJump()
     {
         var v = rb.linearVelocity;
         v.y = 0f;
+        rb.linearVelocity = v;
 
-        Vector3 dir = GetMoveDirection();
-        Vector3 planarImpulse = (dir.sqrMagnitude > 0.0001f) ? (dir * forwardImpulse) : Vector3.zero;
-
-        rb.linearVelocity = new Vector3(v.x, 0f, v.z);
-        rb.AddForce(Vector3.up * upImpulse + planarImpulse, ForceMode.Impulse);
+        rb.AddForce(Vector3.up * s.maxUpImpulse, ForceMode.Impulse);
 
         _isJumping = true;
         IsGrounded = false;
+        _jumpStartTime = Time.time;
     }
 
-    private Vector3 GetMoveDirection()
+    void CutJump()
     {
-        Vector2 input = move.action.ReadValue<Vector2>();
-        if (input.sqrMagnitude < moveDeadzone * moveDeadzone)
-            return Vector3.zero;
+        if (!_isJumping)
+            return;
 
-        if (movementReference != null)
-        {
-            Vector3 f = movementReference.forward; f.y = 0f; f.Normalize();
-            Vector3 r = movementReference.right;   r.y = 0f; r.Normalize();
-            Vector3 d = f * input.y + r * input.x;
-            return (d.sqrMagnitude > 0.0001f) ? d.normalized : Vector3.zero;
-        }
+        var v = rb.linearVelocity;
+        if (v.y <= 0f)
+            return;
 
-        Vector3 world = new Vector3(input.x, 0f, input.y);
-        return (world.sqrMagnitude > 0.0001f) ? world.normalized : Vector3.zero;
+        // Only allow cut shortly after takeoff
+        if (Time.time - _jumpStartTime > s.maxChargeTime)
+            return;
+
+        // Reduce upward velocity to short-hop height
+        float cutFactor = Mathf.Clamp01(
+            s.minUpImpulse / Mathf.Max(0.01f, s.maxUpImpulse)
+        );
+
+        v.y *= cutFactor;
+        rb.linearVelocity = v;
     }
 }

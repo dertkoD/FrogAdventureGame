@@ -9,20 +9,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0f3247737ccfb5346973b834d47d1db7, type: 3}
-  m_Name: PlayerJumpConfig
-  m_EditorClassIdentifier: Assembly-CSharp::JumpSettingsSO
-  jumpBufferTime: 0.12
-  coyoteTime: 0.1
-  groundMask:
+  m_Script: {fileID: 11500000, guid: e1bf2ed2bfc9be24ba92fa739456fcb8, type: 3}
+  m_Name: ItemPullSettings
+  m_EditorClassIdentifier: Assembly-CSharp::ItemPullSettingsSO
+  queryRadius: 8
+  maxDistance: 12
+  pullMask:
+    serializedVersion: 2
+    m_Bits: 128
+  obstructionMask:
     serializedVersion: 2
     m_Bits: 64
-  maxSlopeAngle: 10
-  leaveGroundVelocity: 0.05
-  maxChargeTime: 0.2
-  minUpImpulse: 4
-  maxUpImpulse: 7
-  charge01:
+  pullDuration: 0.25
+  pullCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
@@ -46,3 +45,13 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  stopWhenClose: 1
+  stopDistance: 0.35
+  pullDrag: 0
+  disableGravityWhilePulling: 1
+  makeKinematicWhilePulling: 1
+  freezeRotationWhilePulling: 1
+  cooldownMode: 0
+  cooldownSeconds: 0.25
+  queryOriginUp: 1.2
+  catchPointUp: 1.2
