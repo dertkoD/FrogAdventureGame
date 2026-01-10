@@ -296,6 +296,7 @@ GameObject:
   - component: {fileID: 16680717}
   - component: {fileID: 16680716}
   - component: {fileID: 16680715}
+  - component: {fileID: 16680718}
   m_Layer: 6
   m_Name: pCube8 (2)
   m_TagString: Untagged
@@ -333,7 +334,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -396,6 +397,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 16680713}
   m_Mesh: {fileID: 6788383922943872000, guid: 869798bb3c0ea6742bb51502c7de2fa8, type: 3}
+--- !u!114 &16680718
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 16680713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9627c9de68bb3a84897aefd8022c44d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DeathZone
+  playerTag: Player
+  oneShotPerEnter: 0
 --- !u!1 &37769279 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8086177816524472271, guid: 869798bb3c0ea6742bb51502c7de2fa8, type: 3}
@@ -978,7 +993,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MoveOnPlayerTrigger
   mover: {fileID: 2129170755}
   playerTag: Player
-  distanceMeters: 18
+  distanceMeters: 10
 --- !u!1001 &114660357
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16745,6 +16760,7 @@ GameObject:
   - component: {fileID: 1214197479}
   - component: {fileID: 1214197478}
   - component: {fileID: 1214197477}
+  - component: {fileID: 1214197480}
   m_Layer: 6
   m_Name: pCube8 (5)
   m_TagString: Untagged
@@ -16782,7 +16798,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -16845,6 +16861,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1214197475}
   m_Mesh: {fileID: 6788383922943872000, guid: 869798bb3c0ea6742bb51502c7de2fa8, type: 3}
+--- !u!114 &1214197480
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1214197475}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9627c9de68bb3a84897aefd8022c44d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DeathZone
+  playerTag: Player
+  oneShotPerEnter: 0
 --- !u!1 &1215832121 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -3577488957100464081, guid: 869798bb3c0ea6742bb51502c7de2fa8, type: 3}
@@ -16922,6 +16952,8 @@ GameObject:
   - component: {fileID: 1216753388}
   - component: {fileID: 1216753390}
   - component: {fileID: 1216753389}
+  - component: {fileID: 1216753392}
+  - component: {fileID: 1216753391}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -17188,6 +17220,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
   maxHp: 100
   currentHp: 60
+--- !u!114 &1216753391
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1216753378}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5e8f26fea5ac8b4dba1e5fdc93d719e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RespawnPointTracker
+  groundChecker: {fileID: 1216753383}
+  saveInterval: 0.05
+  respawnUpOffset: 0.2
+--- !u!114 &1216753392
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1216753378}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cac193a3368343f47b015c871d3e9b25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerControlLock
+  movement: {fileID: 1216753386}
+  jump: {fileID: 1216753384}
+  rb: {fileID: 1216753385}
+  zeroPlanarVelocity: 1
+  zeroVerticalVelocity: 1
+  makeKinematicWhileLocked: 0
+  unlockUpNudge: 0
 --- !u!1 &1220949363 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -276692700001628273, guid: 869798bb3c0ea6742bb51502c7de2fa8, type: 3}
@@ -17238,7 +17304,7 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -2735251984287490357, guid: 869798bb3c0ea6742bb51502c7de2fa8, type: 3}
 --- !u!1 &1233671006 stripped
@@ -18976,6 +19042,7 @@ GameObject:
   - component: {fileID: 1392194401}
   - component: {fileID: 1392194400}
   - component: {fileID: 1392194399}
+  - component: {fileID: 1392194402}
   m_Layer: 6
   m_Name: pCube8 (3)
   m_TagString: Untagged
@@ -19013,7 +19080,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -19076,6 +19143,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1392194397}
   m_Mesh: {fileID: 6788383922943872000, guid: 869798bb3c0ea6742bb51502c7de2fa8, type: 3}
+--- !u!114 &1392194402
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1392194397}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9627c9de68bb3a84897aefd8022c44d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DeathZone
+  playerTag: Player
+  oneShotPerEnter: 0
 --- !u!1 &1397755204 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -270084420956868377, guid: 869798bb3c0ea6742bb51502c7de2fa8, type: 3}
@@ -24233,6 +24314,7 @@ GameObject:
   - component: {fileID: 1825051227}
   - component: {fileID: 1825051226}
   - component: {fileID: 1825051225}
+  - component: {fileID: 1825051228}
   m_Layer: 6
   m_Name: pCube8 (4)
   m_TagString: Untagged
@@ -24270,7 +24352,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -24333,6 +24415,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1825051223}
   m_Mesh: {fileID: 6788383922943872000, guid: 869798bb3c0ea6742bb51502c7de2fa8, type: 3}
+--- !u!114 &1825051228
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1825051223}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9627c9de68bb3a84897aefd8022c44d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DeathZone
+  playerTag: Player
+  oneShotPerEnter: 0
 --- !u!1 &1826741440
 GameObject:
   m_ObjectHideFlags: 0
