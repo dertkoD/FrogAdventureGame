@@ -21,18 +21,31 @@ public class SplineMoverDistance : MonoBehaviour
     [Header("Sampling (meters<->t)")]
     [SerializeField] private int samples = 500;
 
+    [Header("After spline end (inertia)")]
+    [Tooltip("Если 0, будет использована speed.")]
+    [SerializeField] private float inertiaSpeed = 0f;
+    [Tooltip("Сколько секунд лететь по инерции после конца сплайна, затем уничтожить.")]
+    [SerializeField] private float inertiaLifetime = 2f;
+    [Tooltip("Уничтожать объект после инерции.")]
+    [SerializeField] private bool destroyAfterInertia = true;
+
     private Rigidbody rb;
 
     private float[] tSamples;
     private float[] cumLen;
     private float totalLength;
 
-    private float currentT;   // 0..1
-    private float currentLen; // 0..totalLength
+    private float currentT;   
+    private float currentLen; 
 
-    private bool fleeing;      // игрок внутри
-    private bool movingToStop; // едем до targetLen после выхода
+    private bool fleeing;      
+    private bool movingToStop; 
     private float targetLen;
+
+    // --- inertia state ---
+    private bool inertia;
+    private float inertiaTimer;
+    private Vector3 inertiaDirWorld;
 
     private void Awake()
     {
@@ -63,17 +76,19 @@ public class SplineMoverDistance : MonoBehaviour
     {
         fleeing = true;
         movingToStop = false;
+        inertia = false;
     }
 
     // Вызывайте при выходе игрока из триггера
     public void StopFleeAndMoveExtra(float extraDistanceMeters)
     {
         fleeing = false;
+        inertia = false;
 
-        // если сплайн не loop и мы уже в конце — просто остановимся
+        // если сплайн не loop и мы уже в конце — переходим в инерцию
         if (!loop && currentLen >= totalLength - 0.0001f)
         {
-            movingToStop = false;
+            BeginInertiaFromEnd();
             return;
         }
 
@@ -84,6 +99,21 @@ public class SplineMoverDistance : MonoBehaviour
 
     private void FixedUpdate()
     {
+        // режим инерции — отдельно
+        if (inertia)
+        {
+            float v = (inertiaSpeed > 0f) ? inertiaSpeed : speed;
+            Vector3 newPos = rb.position + inertiaDirWorld * (v * Time.fixedDeltaTime);
+            rb.MovePosition(newPos);
+
+            inertiaTimer += Time.fixedDeltaTime;
+            if (destroyAfterInertia && inertiaTimer >= Mathf.Max(0f, inertiaLifetime))
+            {
+                Destroy(gameObject);
+            }
+            return;
+        }
+
         if (!fleeing && !movingToStop) return;
 
         float step = speed * Time.fixedDeltaTime;
@@ -111,8 +141,42 @@ public class SplineMoverDistance : MonoBehaviour
             }
         }
 
+        // Если дошли до конца сплайна (и не loop) — включаем инерцию
+        if (!loop && currentLen >= totalLength - 0.0001f)
+        {
+            BeginInertiaFromEnd();
+            return;
+        }
+
         currentT = TAtLength(currentLen);
         ApplyPose(currentT);
+    }
+
+    private void BeginInertiaFromEnd()
+    {
+        // Ставим точную финальную позу и вычисляем направление по касательной на конце
+        currentLen = totalLength;
+        currentT = 1f;
+
+        // применим позу на конце, чтобы позиция была на конце сплайна
+        ApplyPose(currentT);
+
+        // направление инерции — касательная на конце
+        Spline spline = splineContainer.Splines[splineIndex];
+        Vector3 tangentWorld = splineContainer.transform.TransformDirection((Vector3)spline.EvaluateTangent(1f));
+        if (tangentWorld.sqrMagnitude < 1e-6f)
+        {
+            // запасной вариант: пусть летит по forward объекта
+            tangentWorld = transform.forward;
+        }
+
+        inertiaDirWorld = tangentWorld.normalized;
+        inertiaTimer = 0f;
+        inertia = true;
+
+        // выключаем режимы движения по сплайну
+        fleeing = false;
+        movingToStop = false;
     }
 
     private void ApplyPose(float t)
