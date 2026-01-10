@@ -9179,7 +9179,7 @@ Transform:
   m_GameObject: {fileID: 656621790}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -47.30188, y: -82.20293, z: -42.99614}
+  m_LocalPosition: {x: -47.30188, y: -82.20293, z: -44.21}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -12139,53 +12139,53 @@ MonoBehaviour:
       TangentIn:
         x: -0
         y: -0
-        z: -4.8255296
+        z: -4.7403517
       TangentOut:
         x: 0
         y: 0
-        z: 4.003837
+        z: 3.5083916
       Rotation:
         value:
-          x: -0.15752229
-          y: 0.22490084
-          z: 0.005530672
-          w: 0.9615487
+          x: -0.1760715
+          y: 0.18066269
+          z: 0.016976325
+          w: 0.96750796
     - Position:
-        x: 22
+        x: 18.5
         y: 20.3
         z: -111.2
       TangentIn:
         x: -0
         y: -0
-        z: -4.245923
+        z: -3.7249463
       TangentOut:
         x: 0
         y: 0
-        z: 5.8776975
+        z: 5.625958
       Rotation:
         value:
-          x: -0.0860069
-          y: 0.252527
-          z: 0.010189065
-          w: 0.9637059
+          x: -0.10574525
+          y: 0.23713689
+          z: 0.016900191
+          w: 0.965556
     - Position:
-        x: 21.19024
+        x: 20.5
         y: 18
-        z: -85.77373
+        z: -87.2
       TangentIn:
         x: -0
         y: -0
-        z: -3.7643712
+        z: -3.3516219
       TangentOut:
         x: 0
         y: 0
-        z: 3.0184782
+        z: 2.648359
       Rotation:
         value:
-          x: 0.017504934
-          y: -0.5158731
-          z: 0.011263453
-          w: 0.85641205
+          x: 0.018462664
+          y: -0.4790629
+          z: 0.0128568765
+          w: 0.8774922
     - Position:
         x: 7.3
         y: 18.8
@@ -12193,17 +12193,17 @@ MonoBehaviour:
       TangentIn:
         x: -0
         y: -0
-        z: -1.8049908
+        z: -1.7621737
       TangentOut:
         x: 0
         y: 0
-        z: 0.5594697
+        z: 0.56952995
       Rotation:
         value:
-          x: 0.012877959
-          y: -0.6174186
-          z: -0.04468846
-          w: 0.7852589
+          x: 0.01173325
+          y: -0.60640603
+          z: -0.04583539
+          w: 0.79374635
     - Position:
         x: 6.5
         y: 18.8
@@ -14133,6 +14133,7 @@ GameObject:
   - component: {fileID: 1216753390}
   - component: {fileID: 1216753389}
   - component: {fileID: 1216753391}
+  - component: {fileID: 1216753392}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -14414,6 +14415,25 @@ MonoBehaviour:
   groundChecker: {fileID: 1216753383}
   saveInterval: 0.05
   respawnUpOffset: 0.2
+--- !u!114 &1216753392
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1216753378}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cac193a3368343f47b015c871d3e9b25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerControlLock
+  movement: {fileID: 1216753386}
+  jump: {fileID: 1216753384}
+  rb: {fileID: 1216753385}
+  zeroPlanarVelocity: 1
+  zeroVerticalVelocity: 1
+  makeKinematicWhileLocked: 0
+  unlockUpNudge: 0
 --- !u!1 &1220949363 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -276692700001628273, guid: 869798bb3c0ea6742bb51502c7de2fa8, type: 3}
@@ -20763,8 +20783,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2140899329}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.044823844, y: 0.95405525, z: -0.18447793, w: -0.23181324}
-  m_LocalPosition: {x: -47.12473, y: -80.43858, z: -51.96322}
+  m_LocalRotation: {x: 0.009628831, y: -0.68007994, z: 0.008933416, w: 0.73302037}
+  m_LocalPosition: {x: -46.97, y: -80.722694, z: -50.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
