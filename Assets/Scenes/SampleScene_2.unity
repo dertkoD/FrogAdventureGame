@@ -410,6 +410,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DeathZone
   playerTag: Player
+  damageOnEnter: 10
   oneShotPerEnter: 0
 --- !u!1 &37769279 stripped
 GameObject:
@@ -2075,6 +2076,11 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.01, y: 0.011368011, z: 0.009999999}
   m_Center: {x: 0.0049999924, y: 0.0056840056, z: -0.0050000004}
+--- !u!4 &161751809 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 931770158652708754, guid: 869798bb3c0ea6742bb51502c7de2fa8, type: 3}
+  m_PrefabInstance: {fileID: 492443102}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &180054597
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9586,6 +9592,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 869798bb3c0ea6742bb51502c7de2fa8, type: 3}
       insertIndex: 150
       addedObject: {fileID: 1689042725}
+    - targetCorrespondingSourceObject: {fileID: 931770158652708754, guid: 869798bb3c0ea6742bb51502c7de2fa8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 725844429}
     - targetCorrespondingSourceObject: {fileID: -3542193851826251356, guid: 869798bb3c0ea6742bb51502c7de2fa8, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1613138945}
@@ -10910,6 +10919,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DeathZone
   playerTag: Player
+  damageOnEnter: 10
   oneShotPerEnter: 0
 --- !u!1 &633860388
 GameObject:
@@ -12271,6 +12281,74 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6481964768734165040, guid: 0430029d8113a6e48b11fda1c9e309e9, type: 3}
   m_PrefabInstance: {fileID: 701662455}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &725844428
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 725844429}
+  - component: {fileID: 725844430}
+  - component: {fileID: 725844431}
+  m_Layer: 6
+  m_Name: damagecollider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &725844429
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 725844428}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 161751809}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &725844430
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 725844428}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.009909097, y: 0.02685448, z: 0.009933513}
+  m_Center: {x: 0.0050041294, y: 0.013717175, z: -0.0050202743}
+--- !u!114 &725844431
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 725844428}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70f95c746a301f9469e4f964a31b907d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OneShotDamageTrigger
+  playerTag: Player
+  damage: 10
 --- !u!1 &729012317 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -856822196117466965, guid: 869798bb3c0ea6742bb51502c7de2fa8, type: 3}
@@ -14295,13 +14373,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 974488591}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.16576315, y: -0.49364048, z: 0.096465595, w: 0.84825474}
-  m_LocalPosition: {x: 0.9624269, y: -0.07, z: -1.0645127}
+  m_LocalRotation: {x: -0, y: -0.4473164, z: -0, w: 0.89437586}
+  m_LocalPosition: {x: 1.0513, y: -0.066, z: -1.0806}
   m_LocalScale: {x: 11.148407, y: 1.3928162, z: 15.841069}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 123115109}
-  m_LocalEulerAnglesHint: {x: -10.718, y: -62.237, z: 19.458}
+  m_LocalEulerAnglesHint: {x: 0, y: -53.143, z: 0}
 --- !u!65 &974488593
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -16186,7 +16264,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9037556357942648061, guid: a1056800bb6599b4b9d3ab47c2b04ffb, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.0810747
+      value: 1.1355
       objectReference: {fileID: 0}
     - target: {fileID: 9037556357942648061, guid: a1056800bb6599b4b9d3ab47c2b04ffb, type: 3}
       propertyPath: m_LocalPosition.y
@@ -16194,7 +16272,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9037556357942648061, guid: a1056800bb6599b4b9d3ab47c2b04ffb, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.0666702
+      value: -1.0635
       objectReference: {fileID: 0}
     - target: {fileID: 9037556357942648061, guid: a1056800bb6599b4b9d3ab47c2b04ffb, type: 3}
       propertyPath: m_LocalRotation.w
@@ -16908,6 +16986,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DeathZone
   playerTag: Player
+  damageOnEnter: 10
   oneShotPerEnter: 0
 --- !u!1 &1215832121 stripped
 GameObject:
@@ -17253,7 +17332,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
   maxHp: 100
-  currentHp: 90
+  currentHp: 100
 --- !u!114 &1216753391
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19225,6 +19304,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DeathZone
   playerTag: Player
+  damageOnEnter: 10
   oneShotPerEnter: 0
 --- !u!1 &1397755204 stripped
 GameObject:
@@ -24706,6 +24786,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DeathZone
   playerTag: Player
+  damageOnEnter: 10
   oneShotPerEnter: 0
 --- !u!1 &1826741440
 GameObject:
